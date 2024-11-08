@@ -1,8 +1,8 @@
 'use server'
 import { useState } from 'react'
-import { PrismaClient } from '@prisma/client'
+import { db } from '@vercel/postgres'
 
-const prisma = new PrismaClient()
+const client = await db.connect();
 
 export interface CardData {
   Id: string,
@@ -12,7 +12,7 @@ export interface CardData {
 }
 
 export async function getCardsFromDB() {
-  const cards = await prisma.cards.findMany()
+  const cards = await client.cards.findMany()
 
   return cards
 }
