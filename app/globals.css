@@ -31,5 +31,9 @@ p {
 @layer components {
   .standard-button {
     @apply text-2xl justify-center items-center mx-auto block border-4 rounded-xl w-60 h-24 my-24 flex
+    transition hover:text-itext hover:bg-accent
+  }
+  .standard-panel {
+    @apply bg-secondary m-8 p-4 rounded-lg
   }
 }

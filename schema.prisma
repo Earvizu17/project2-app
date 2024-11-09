@@ -4,13 +4,13 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
+  url = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model Cards {
-  Id            String @id @default(cuid())
+  Id            Int     @id @default(autoincrement())
   Question      String
   Answer        String
-  Understanding Float
+  Understanding Int
 }

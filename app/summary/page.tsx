@@ -1,7 +1,9 @@
 'use client'
-import { useState, useEffect } from 'react';
+import Image from 'next/image'
+import { useState, useEffect } from 'react'
 
 import { Card, getCards } from '@/app/components/cards'
+import { removeCard } from '@/app/components/cards_server'
 
 
 function generatePercentageColor(time: number) {
@@ -52,30 +54,32 @@ function generatePercentageColor(time: number) {
 }
 
 
-function CardReport({ card }: {card: Card}) {
+function CardReport({ card, onRemove }: {card: Card, onRemove: () => void}) {
   const percentUnderstood = Math.round(card.understanding * 100)
-  //const bgClass = "bg-[" + generatePercentageColor(card.understanding) + "]"
-
-  //console.log(bgClass)
 
   return (
-    <div className="flex m-2 items-center">
+    <div className="flex mx-2 py-2 items-center border-t border-b border-gray-700">
       <div
         style={{ backgroundColor: generatePercentageColor(card.understanding)}}
-        className="p-1 rounded-lg mr-2 w-20 text-center text-itext font-bold"
+        className="p-1 rounded-lg mr-2 w-24 text-center text-itext font-bold"
       >
         {percentUnderstood}%
       </div>
-      <div>
+      <div className="flex-grow">
         {card.question}
       </div>
+      <button className="bg-hard p-1 rounded-lg" onClick={onRemove}>
+        <Image src="/x_icon.svg" width={20} height={20} alt="Remove card icon"/>
+      </button>
     </div>
   )
 }
 
-
 export default function Summary() {
   const cards = getCards()
+
+  const [removedCards, setRemovedCards] = useState<string[]>([])
+
 
   if (cards == null) {
     return <div>Loading cards...</div>
@@ -86,14 +90,28 @@ export default function Summary() {
     return <div>Add a card and start studying to see your summary!</div>
   }
 
+  function removeCardReport(id: string) {
+    setRemovedCards([...removedCards, id])
+    removeCard(id)
+  }
+
   return (
     <div>
       <h1>Summary</h1>
-      <div className="bg-secondary m-8 p-4 rounded-lg">
+      <div className="standard-panel">
+      <div className="flex mx-2">
+	<span className="w-24 text-center">Understood</span>
+	<span className="flex-grow mx-2">Question</span>
+	<span>Remove Card</span>
+      </div>
         {
-          cards.map((card: Card) => (
-            <CardReport card={card}/>
-          ))
+          cards.map((card: Card) => {
+            if (removedCards.indexOf(card.id) != -1) {
+              return
+            }
+            
+            return <CardReport card={card} key={card.id} onRemove={() => removeCardReport(card.id)}/>
+          })
         }
       </div>
     </div>
