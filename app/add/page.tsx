@@ -34,7 +34,7 @@ export default function Add() {
           <input type="text" name="answer" disabled={submitting} className={textInputClass}></input>
         </label>
         <label className="text-center">
-          Understanding:
+          understanding:
           <input type="text" name="understanding" disabled={submitting} className={textInputClass}></input>
         </label>
         <button type="submit" disabled={submitting} className="standard-button">
