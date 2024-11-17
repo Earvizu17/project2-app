@@ -19,7 +19,7 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "Spacial Repition",
-  description: "A flashcards system that shows more frequently missed cards more often.",
+  description: "No Better way to study than with some flash cards.",
 }
 
 export default function RootLayout({

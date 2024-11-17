@@ -1,44 +1,54 @@
-"use client"
-import { useEffect, useRef, useState } from "react"
-import { useFormState } from "react-dom"
-
-import { addCard } from "@/app/components/cards_server"
-
+"use client";
+import { useEffect, useRef, useState } from "react";
+import { useFormState } from "react-dom";
+import { addCard } from "@/app/components/cards_server";
 
 export default function Add() {
-  const textInputClass = "bg-background mx-2 mb-2 p-1 rounded-lg block"
-
-  const [formState, formAction] = useFormState(addCard, "initial")
-  const [submitting, setSubmitting] = useState(false)
-  const form = useRef<HTMLFormElement>(null)
-
+  const [formState, formAction] = useFormState(addCard, "initial");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    if (formState != "initial" && form.current != null) {
-      form.current.reset()
-      setSubmitting(false)
+    if (formState !== "initial" && formRef.current) {
+      formRef.current.reset();
+      setIsSubmitting(false);
     }
-    
-  }, [formState, submitting])
+  }, [formState]);
+
+  const handleSubmit = () => setIsSubmitting(true);
+
+  const textInputClass = "w-full p-2 mb-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none";
+  const labelClass = "block text-sm font-semibold mb-1";
 
   return (
-    <div>
-      <h1>Add a card:</h1>
-      <form className="flex flex-col standard-panel items-center" action={formAction} onSubmit={() => setSubmitting(true)} ref={form}>
-        <label className="text-center">
-          Question:
-          <input type="text" name="question" disabled={submitting} className={textInputClass}></input>
-        </label>
-        <label className="text-center">
-          Answer:
-          <input type="text" name="answer" disabled={submitting} className={textInputClass}></input>
-        </label>
-        <label className="text-center">
-          understanding:
-          <input type="text" name="understanding" disabled={submitting} className={textInputClass}></input>
-        </label>
-        <button type="submit" disabled={submitting} className="standard-button">
-          {submitting ? "Adding card..." : "Add Card"}
+    <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-lg">
+      <h1 className="text-2xl font-bold text-center mb-6">Add a New Card</h1>
+      <form
+        className="flex flex-col"
+        action={formAction}
+        onSubmit={handleSubmit}
+        ref={formRef}
+      >
+        {["Question", "Answer", "Understanding"].map((label) => (
+          <div key={label} className="mb-4">
+            <label className={labelClass}>{label}:</label>
+            <input
+              type="text"
+              name={label.toLowerCase()}
+              disabled={isSubmitting}
+              className={textInputClass}
+              placeholder={`Enter the ${label.toLowerCase()} here...`}
+            />
+          </div>
+        ))}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={`w-full py-2 text-white font-semibold rounded-lg transition-colors ${
+            isSubmitting ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+          }`}
+        >
+          {isSubmitting ? "Adding card..." : "Add Card"}
         </button>
       </form>
     </div>
