@@ -29,7 +29,7 @@ export default function Add() {
         onSubmit={handleSubmit}
         ref={formRef}
       >
-        {["Question", "Answer", "Understanding"].map((label) => (
+        {["Question", "Answer"].map((label) => (
           <div key={label} className="mb-4">
             <label className={labelClass}>{label}:</label>
             <input
